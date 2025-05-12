@@ -1,5 +1,5 @@
 package com.example.bookingrestaurant.model;
 
 public enum RestaurantTableStatus {
-    AVAILABLE, BOOKED, SCHEDULED
+    AVAILABLE, BOOKED, INACTIVE
 }
