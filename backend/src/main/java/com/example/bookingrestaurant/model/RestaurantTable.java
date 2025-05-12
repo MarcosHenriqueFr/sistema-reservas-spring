@@ -1,5 +1,6 @@
 package com.example.bookingrestaurant.model;
 
+import com.example.bookingrestaurant.dto.RestaurantTableDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "restaurant_tables")
@@ -25,6 +28,11 @@ public class RestaurantTable {
 
     public RestaurantTable(){
 
+    }
+
+    public RestaurantTable(RestaurantTableDTO data){
+        this.name = data.name();
+        this.capacity = data.capacity();
     }
 
     public Long getId() {
@@ -57,5 +65,17 @@ public class RestaurantTable {
 
     public void setStatus(RestaurantTableStatus restaurantTableStatus) {
         this.restaurantTableStatus = restaurantTableStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        RestaurantTable that = (RestaurantTable) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
