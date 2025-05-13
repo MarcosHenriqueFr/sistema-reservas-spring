@@ -24,7 +24,7 @@ public class RestaurantTable {
     private int capacity;
 
     @Enumerated(EnumType.STRING)
-    private RestaurantTableStatus restaurantTableStatus = RestaurantTableStatus.AVAILABLE;
+    private RestaurantTableStatus restaurantTableStatus;
 
     public RestaurantTable(){
 
@@ -33,6 +33,7 @@ public class RestaurantTable {
     public RestaurantTable(RestaurantTableDTO data){
         this.name = data.name();
         this.capacity = data.capacity();
+        this.restaurantTableStatus = RestaurantTableStatus.AVAILABLE;
     }
 
     public Long getId() {
