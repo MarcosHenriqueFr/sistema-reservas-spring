@@ -43,7 +43,8 @@ public class SecurityConfig {
     };
 
     private final String[] ENDPOINT_WITH_AUTH = {
-            "/mesas"
+            "/mesas",
+            "/mesas/:{id}"
     };
 
     // O mét0do que controla toda a segurança
@@ -55,6 +56,8 @@ public class SecurityConfig {
                                 auth.requestMatchers(HttpMethod.POST, ENDPOINT_WITHOUT_AUTH).permitAll()
                                         .requestMatchers(HttpMethod.POST, ENDPOINT_WITH_AUTH).hasRole(ADMIN_ROLE)
                                         .requestMatchers(HttpMethod.GET, ENDPOINT_WITH_AUTH).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
+                                        .requestMatchers(HttpMethod.PATCH, ENDPOINT_WITH_AUTH).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
+                                        .requestMatchers(HttpMethod.DELETE, ENDPOINT_WITH_AUTH).hasRole(ADMIN_ROLE)
                                         .anyRequest().denyAll()
                 )
                 .httpBasic(Customizer.withDefaults())

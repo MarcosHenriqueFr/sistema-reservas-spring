@@ -1,6 +1,5 @@
 package com.example.bookingrestaurant.model;
 
-import com.example.bookingrestaurant.dto.UserPostDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
