@@ -42,9 +42,14 @@ public class SecurityConfig {
             "/usuarios/registrar"
     };
 
-    private final String[] ENDPOINT_WITH_AUTH = {
+    private final String[] TABLE_ENDPOINTS = {
             "/mesas",
             "/mesas/:{id}"
+    };
+
+    private final String[] BOOKING_ENDPOINTS = {
+            "/reservas",
+            "/reservas/:{id}/cancelar"
     };
 
     // O mét0do que controla toda a segurança
@@ -54,10 +59,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth.requestMatchers(HttpMethod.POST, ENDPOINT_WITHOUT_AUTH).permitAll()
-                                        .requestMatchers(HttpMethod.POST, ENDPOINT_WITH_AUTH).hasRole(ADMIN_ROLE)
-                                        .requestMatchers(HttpMethod.GET, ENDPOINT_WITH_AUTH).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
-                                        .requestMatchers(HttpMethod.PATCH, ENDPOINT_WITH_AUTH).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
-                                        .requestMatchers(HttpMethod.DELETE, ENDPOINT_WITH_AUTH).hasRole(ADMIN_ROLE)
+                                        .requestMatchers(HttpMethod.POST, TABLE_ENDPOINTS).hasRole(ADMIN_ROLE)
+                                        .requestMatchers(HttpMethod.GET, TABLE_ENDPOINTS).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
+                                        .requestMatchers(HttpMethod.PATCH, TABLE_ENDPOINTS).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
+                                        .requestMatchers(HttpMethod.DELETE, TABLE_ENDPOINTS).hasRole(ADMIN_ROLE)
+                                        .requestMatchers(BOOKING_ENDPOINTS).authenticated()
                                         .anyRequest().denyAll()
                 )
                 .httpBasic(Customizer.withDefaults())
