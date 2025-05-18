@@ -25,7 +25,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Ambas serem relações 1 - 1
+    // Ambas são relações 1 - 1
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private User user;
@@ -42,7 +42,7 @@ public class Booking {
     private BookingStatus bookingStatus;
 
     public Booking(){
-
+        this.bookingStatus = BookingStatus.ACTIVE;
     }
 
     public Long getId() {
