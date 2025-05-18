@@ -2,6 +2,7 @@ package com.example.bookingrestaurant.controllers;
 
 import com.example.bookingrestaurant.config.security.auth.AuthenticationService;
 import com.example.bookingrestaurant.dto.UserPostDTO;
+import com.example.bookingrestaurant.model.User;
 import com.example.bookingrestaurant.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("registrar")
-    public ResponseEntity<Void> createUser(@RequestBody UserPostDTO userData) throws Exception {
-        userService.createUser(userData);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<User> createUser(@RequestBody UserPostDTO userData) throws Exception {
+        User user = userService.createUser(userData);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
