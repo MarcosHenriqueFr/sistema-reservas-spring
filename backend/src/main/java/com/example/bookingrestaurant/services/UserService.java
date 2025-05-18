@@ -8,6 +8,8 @@ import com.example.bookingrestaurant.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Pattern;
+
 @Service
 public class UserService {
 
@@ -17,7 +19,9 @@ public class UserService {
     @Autowired
     private SecurityConfig securityConfig;
 
-    public void createUser(UserPostDTO dto){
+    // TODO melhorar as Exceptions
+
+    public void createUser(UserPostDTO dto) throws Exception {
         String name = dto.name();
         String email = dto.email();
         String password = securityConfig.passwordEncoder().encode(dto.password());

@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Email;
 
 @Entity
 @Table(name = "users")
@@ -17,15 +19,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 120)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 100)
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
+            flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private RoleName role;
 

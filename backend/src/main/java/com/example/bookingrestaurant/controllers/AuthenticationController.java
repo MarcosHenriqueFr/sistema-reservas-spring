@@ -29,7 +29,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("registrar")
-    public ResponseEntity<Void> createUser(@RequestBody UserPostDTO userData){
+    public ResponseEntity<Void> createUser(@RequestBody UserPostDTO userData) throws Exception {
         userService.createUser(userData);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
