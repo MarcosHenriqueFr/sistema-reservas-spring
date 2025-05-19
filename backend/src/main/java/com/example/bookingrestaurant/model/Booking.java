@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -25,9 +26,8 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Ambas são relações 1 - 1
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -36,13 +36,14 @@ public class Booking {
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime booking_date;
+    private LocalDateTime bookingDate;
 
+    @Column(length = 60)
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
     public Booking(){
-        this.bookingStatus = BookingStatus.ACTIVE;
+
     }
 
     public Long getId() {
@@ -69,12 +70,12 @@ public class Booking {
         this.table = table;
     }
 
-    public LocalDateTime getBooking_date() {
-        return booking_date;
+    public LocalDateTime getBookingDate() {
+        return bookingDate;
     }
 
-    public void setBooking_date(LocalDateTime booking_date) {
-        this.booking_date = booking_date;
+    public void setBookingDate(LocalDateTime bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
     public BookingStatus getBookingStatus() {
