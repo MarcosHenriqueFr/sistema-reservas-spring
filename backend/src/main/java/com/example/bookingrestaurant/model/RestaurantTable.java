@@ -1,6 +1,7 @@
 package com.example.bookingrestaurant.model;
 
 import com.example.bookingrestaurant.dto.RestaurantTableDTO;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,10 +20,12 @@ public class RestaurantTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 50)
     private String name;
 
     private int capacity;
 
+    @Column(length = 70)
     @Enumerated(EnumType.STRING)
     private RestaurantTableStatus restaurantTableStatus;
 
