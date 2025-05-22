@@ -11,6 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service responsável por receber os dados passados pelo AuthenticationController e BookingService,
+ * sendo possível criar, salvar e obter os dados dos usuários diretamente com o banco.
+ * Possui dois atributos para obtenção de dados: UserRepository e UserDetailsService.
+ * Possui um atributo para encriptar os dados: SecurityConfig.
+ * Lança as exceções relacionadas com o Usuário.
+ */
 @Service
 public class UserService {
 
@@ -25,6 +32,11 @@ public class UserService {
 
     // TODO melhorar as Exceptions
 
+    /**
+     * Method responsável obter o usuário a partir do elemento único Email.
+     * Recebe os dados de Email do BookingService.
+     * Joga uma Exceção caso o Usuário não tenha sido encontrado no banco de dados.
+     */
     public UserAuthenticated getUserByEmail(String email) throws Exception{
         try {
             return (UserAuthenticated) userDetailsService.loadUserByUsername(email);
@@ -33,6 +45,10 @@ public class UserService {
         }
     }
 
+    /**
+     * Method responsável por persistir um usuário no banco de dados.
+     * Recebe os dados do novo usuário a partir do AuthenticationController
+     */
     public User createUser(UserPostDTO dto) throws Exception {
         String name = dto.name();
         String email = dto.email();
@@ -50,6 +66,10 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Method privado responsável por salvar o usuário no banco de dados.
+     * Recebe os dados do usuário passado e faz o commit dele.
+     */
     private void saveUser(User user){
         userRepository.save(user);
     }
