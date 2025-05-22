@@ -8,6 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Classe dedicada para representar a classe de usuário e obter suas informações.
+ * Usada em BookingService, UserService e UserDetailsImpl.
+ * É uma classe que encapsula as informações do usuário e permite maior controle sobre ele.
+ */
 public class UserAuthenticated implements UserDetails {
 
     private final User user;

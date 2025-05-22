@@ -52,7 +52,15 @@ public class SecurityConfig {
             "/reservas/:{id}/cancelar"
     };
 
-    // O mét0do que controla toda a segurança
+    /**
+     * Bean responsável por gerenciar todos os filtros de segurança
+     * antes das classes RestControllers.
+     * Ele recebe um HttpSecurity, e a partir dele desativa o Cross-Site Request Forgery.
+     * Configura os Métodos Http que podem ser usados, onde e por quem eles podem ser usados, e NEGAM
+     * qualquer outra requisição além dessas.
+     * Usa o httpBasic padrão e por fim,
+     * Um conversor Jwt para remover o prefixo, podendo assim, ser usado nos RequestMatchers.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -74,6 +82,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Bean responsável por remover o prefixo nas authorities do token.
+     * Para que assim possam ser usadas no SecurityFilter.
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter(){
         JwtGrantedAuthoritiesConverter grantedAuthorities = new JwtGrantedAuthoritiesConverter();
@@ -97,6 +109,7 @@ public class SecurityConfig {
         return new NimbusJwtEncoder(jwks);
     }
 
+    /// Bean que define qual será a forma de criptografia usada para persistir a senha do usuário
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
