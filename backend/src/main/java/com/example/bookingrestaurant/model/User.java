@@ -11,6 +11,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Email;
 
+/**
+ * Entidade responsável por representar o Usuário do Sistema.
+ * Possui atributo de ID como a PRIMARY KEY,
+ * NAME que representa seu nome,
+ * EMAIL que representa o atributo unico no banco com uma validação simples de Regex,
+ * Password que representa a senha encriptada do usuário
+ * e role que determina o papel/autoridade do usuário
+ */
 @Entity
 @Table(name = "users")
 public class User {

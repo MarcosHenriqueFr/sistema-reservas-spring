@@ -17,6 +17,15 @@ import jakarta.persistence.TemporalType;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidade responsável por representar a Reserva.
+ * Possui atributos de ID como PRIMARY KEY,
+ * BOOKINGDATE que representa o horário da reserva,
+ * BOOKINGSTATUS que representa se a reserva está ACTIVE ou CANCELED
+ * e, por fim,
+ * USER e TABLE com relacionamento de N - 1,
+ * indicando que uma mesa ou usuário podem ter mais de uma reserva.
+ */
 @Entity
 @Table(name = "bookings")
 public class Booking {

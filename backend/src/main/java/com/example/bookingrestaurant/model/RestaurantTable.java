@@ -12,6 +12,13 @@ import jakarta.persistence.Table;
 
 import java.util.Objects;
 
+/**
+ * Entidade responsável por representar a Mesa do Restaurante.
+ * Possui atributo de ID como a PRIMARY KEY,
+ * NAME que representa o código da mesa,
+ * CAPACITY que representa a quantidade de pessoas que a mesa consegue suportar
+ * e RESTAURANTTABLESTATUS que pode assumir os valores de AVAILABLE, BOOKED E INACTIVE
+ */
 @Entity
 @Table(name = "restaurant_tables")
 public class RestaurantTable {
