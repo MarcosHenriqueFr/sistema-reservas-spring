@@ -37,7 +37,7 @@ public class BookingService {
      * Method responsável por criar uma nova reserva.
      * Recebe os parametros dos dados da nova reserva e o email do usuário.
      * Além das validações da mesa e de usuário,
-     * valida se a data da Reserva é valida e modifica os dados da reserva e da mesa.
+     * valida a data da Reserva e modifica os dados da reserva e da mesa.
      * Por fim, salva o usuário e retorna o dado da reserva.
      */
     public Booking createBooking(BookingPostDTO newBooking, String subject) throws  Exception {
