@@ -2,6 +2,7 @@ package com.example.bookingrestaurant.services;
 
 import com.example.bookingrestaurant.dto.RestaurantTableDTO;
 import com.example.bookingrestaurant.model.RestaurantTable;
+import com.example.bookingrestaurant.model.RestaurantTableStatus;
 import com.example.bookingrestaurant.repositories.RestaurantTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class RestaurantTableService {
         return newTable;
     }
 
-    public void saveRestaurantTable(RestaurantTable table){
+    private void saveRestaurantTable(RestaurantTable table){
         repository.save(table);
     }
 
@@ -58,5 +59,15 @@ public class RestaurantTableService {
         this.saveRestaurantTable(table);
 
         return table;
+    }
+
+    public void checkTableValidation(RestaurantTable table) throws Exception {
+        boolean tableBooked = table.getStatus() == RestaurantTableStatus.BOOKED;
+        boolean tableInactive = table.getStatus() == RestaurantTableStatus.INACTIVE;
+        boolean invalidTable = tableBooked || tableInactive;
+
+        if(invalidTable) {
+            throw new Exception("Mesa inválida");
+        }
     }
 }
