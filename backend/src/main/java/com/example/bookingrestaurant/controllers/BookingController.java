@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller responsável pela rota de /reservas,
+ * tem como principal responsabilidade enviar os dados para a camada de BookingService
+ * para a realização da criação, obtenção e soft delete dos dados das reservas.
+ * Esse Controller aceita somente métodos do tipo POST, GET e PATCH.
+ * */
 @RestController
 @RequestMapping(path = "reservas")
 public class BookingController {
@@ -25,12 +31,22 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
+    /**
+     * Mapping responsável pela requisição do tipo POST na rota de /reservas.
+     * Recebe os dados da nova reserva e do token JWT, envia ele para a camada de BookingService.
+     * Retorna a nova reserva caso ela seja registrada no banco e o Status Http de CREATED.
+     */
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody BookingPostDTO data, @AuthenticationPrincipal Jwt jwt) throws Exception {
         Booking booking = bookingService.createBooking(data, jwt.getSubject());
         return new ResponseEntity<>(booking, HttpStatus.CREATED);
     }
 
+    /**
+     * Mapping responsável pela requisição do tipo GET na rota de /reservas.
+     * Recebe os dados do token do usuário e envia para camada de BookingService.
+     * Retorna suas reservas caso ele tenha e o status Http.
+     */
     @GetMapping
     public ResponseEntity<List<Booking>> getBookingFromUser(@AuthenticationPrincipal Jwt jwt) throws Exception {
         List<Booking> bookings = bookingService.getBookingFromUser(jwt.getSubject());
@@ -38,6 +54,13 @@ public class BookingController {
     }
 
     // TODO o usuario só pode deletar suas reservas, e Exceptions
+
+    /**
+     * Mapping responsável pela requisição do tipo PATCH na rota de /reservas/:{id}/cancelar.
+     * Recebe os dados do id da reserva no banco e
+     * o token do usuário, necessário para validar se a reserva é realmente dele
+     * retorna a reserva cancelada e o status Http
+     */
     @PatchMapping(path = ":{id}/cancelar")
     public ResponseEntity<Booking> softDeleteBooking(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) throws Exception{
         Booking modifiedBooking = bookingService.softDeleteBooking(id, jwt.getSubject());
