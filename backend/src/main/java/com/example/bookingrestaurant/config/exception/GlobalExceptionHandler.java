@@ -3,6 +3,8 @@ package com.example.bookingrestaurant.config.exception;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -25,7 +27,8 @@ import java.util.Set;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // TODO Melhorar os logs, fazer um Handler de Bookings e um Handler do Jpa
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     /**
      * ExceptionHandler genérico responsável por qualquer exceção inesperada no sistema.
      * Caso a Exceção não possua nenhuma mensagem é associada uma mensagem padrão.
@@ -36,7 +39,8 @@ public class GlobalExceptionHandler {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         String error = e.getMessage() == null ? "Um erro aconteceu." : e.getMessage();
 
-        // TODO Fazer log aqui!
+        logger.error("Exceção inesperada aconteceu: {}.", e.getMessage());
+        logger.error("Trace da Exceção: ", e);
 
         System.out.println(e.getMessage());
 
@@ -127,6 +131,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RestaurantTableException.class)
     public ResponseEntity<ErrorResponse> handleRestaurantTableException(RestaurantTableException e){
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        logger.error("Exceção relacionada as mesas de restaurante: {}.", e.getMessage());
+        logger.error("Trace do erro: ", e);
 
         ErrorResponse errorResponse =
                 new ErrorResponse(status.value(), status.getReasonPhrase(), e.getMessage());

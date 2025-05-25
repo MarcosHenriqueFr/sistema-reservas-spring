@@ -6,6 +6,8 @@ import com.example.bookingrestaurant.dto.RestaurantTableDTO;
 import com.example.bookingrestaurant.model.RestaurantTable;
 import com.example.bookingrestaurant.model.RestaurantTableStatus;
 import com.example.bookingrestaurant.repositories.RestaurantTableRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import java.util.List;
  */
 @Service
 public class RestaurantTableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RestaurantTableService.class);
 
     @Autowired
     private RestaurantTableRepository repository;
@@ -37,9 +41,12 @@ public class RestaurantTableService {
      * Recebe os dados passados pelo RestaurantTableController.
      * Salva a nova mesa no banco de dados e retorna ela.
      */
-    public RestaurantTable createRestaurantTable(RestaurantTableDTO data){
+    public RestaurantTable createRestaurantTable(RestaurantTableDTO data, String email){
         RestaurantTable newTable = new RestaurantTable(data);
+
         this.saveRestaurantTable(newTable);
+        logger.info("Mesa de id {} criada pelo usuário {} com sucesso.", newTable.getId(), email);
+
         return newTable;
     }
 
@@ -49,13 +56,15 @@ public class RestaurantTableService {
      */
     private void saveRestaurantTable(RestaurantTable table){
         repository.save(table);
+        logger.info("Mesa de id {} salva no banco de dados", table.getId());
     }
 
     /**
      * Method responsável por retornar todas as mesas do banco.
      * Retorna as mesas para o RestaurantTableController.
      */
-    public List<RestaurantTable> getAllTables() {
+    public List<RestaurantTable> getAllTables(String email) {
+        logger.info("Todas as mesas foram selecionadas pelo usuário com email {}.", email);
         return repository.findAll();
     }
 
@@ -64,10 +73,11 @@ public class RestaurantTableService {
      * Faz uma verificação inicial, para evitar que uma mesa seja apagada se estiver em uso.
      * Não retorna a mesa.
      */
-    public void deleteTable(RestaurantTable table) throws InvalidRestaurantTableException {
+    public void deleteTable(RestaurantTable table, String email) throws InvalidRestaurantTableException {
         checkTableValidation(table);
 
         repository.delete(table);
+        logger.info("Mesa de id {} apagada do banco de dados pelo usuário {}.", table.getId(), email);
     }
 
     /**
@@ -76,7 +86,7 @@ public class RestaurantTableService {
      * Checa se os parâmetros são nulos, e insere os dados atualizados na mesa.
      * Retorna a mesa modificada para o Controller.
      */
-    public RestaurantTable updateTable(Long id, RestaurantTableDTO updates) throws RestaurantTableNotFoundException, InvalidRestaurantTableException {
+    public RestaurantTable updateTable(Long id, RestaurantTableDTO updates, String email) throws RestaurantTableNotFoundException, InvalidRestaurantTableException {
         RestaurantTable table = this.findTableById(id);
         checkTableValidation(table);
 
@@ -93,6 +103,7 @@ public class RestaurantTableService {
         }
 
         this.saveRestaurantTable(table);
+        logger.info("Mesa de id {} modificada pelo usuário {} com sucesso.", table.getId(), email);
 
         return table;
     }

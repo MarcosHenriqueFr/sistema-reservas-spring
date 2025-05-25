@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +43,8 @@ public class RestaurantTableController {
      * independente do seu status.
      */
     @GetMapping
-    public ResponseEntity<List<RestaurantTable>> getAllTables(){
-        List<RestaurantTable> tables = tableService.getAllTables();
+    public ResponseEntity<List<RestaurantTable>> getAllTables(@AuthenticationPrincipal Jwt jwt){
+        List<RestaurantTable> tables = tableService.getAllTables(jwt.getSubject());
         return new ResponseEntity<>(tables, HttpStatus.OK);
     }
 
@@ -52,12 +54,10 @@ public class RestaurantTableController {
      * Retorna a nova mesa caso tenha sido criada e o status Http OK
      */
     @PostMapping
-    public ResponseEntity<RestaurantTable> createTable(@Valid @RequestBody RestaurantTableDTO data){
-        RestaurantTable newTable = tableService.createRestaurantTable(data);
+    public ResponseEntity<RestaurantTable> createTable(@Valid @RequestBody RestaurantTableDTO data, @AuthenticationPrincipal Jwt jwt){
+        RestaurantTable newTable = tableService.createRestaurantTable(data, jwt.getSubject());
         return new ResponseEntity<>(newTable, HttpStatus.CREATED);
     }
-
-    // TODO Fazer o tratamento de Exceções/Criacao -> No delete e no patch
 
     /**
      * Mapping responsável pela requisição do tipo PATCH na rota de /mesas/:{id}.
@@ -65,8 +65,8 @@ public class RestaurantTableController {
      * Retorna a mesa modificada e o status Http OK
      */
     @PatchMapping(path = ":{id}")
-    public ResponseEntity<RestaurantTable> updateTable(@PathVariable Long id, @Valid @RequestBody RestaurantTableDTO updates) throws Exception {
-        RestaurantTable modifiedTable = tableService.updateTable(id, updates);
+    public ResponseEntity<RestaurantTable> updateTable(@PathVariable Long id, @Valid @RequestBody RestaurantTableDTO updates, @AuthenticationPrincipal Jwt jwt) throws Exception {
+        RestaurantTable modifiedTable = tableService.updateTable(id, updates, jwt.getSubject());
         return new ResponseEntity<>(modifiedTable, HttpStatus.OK);
     }
 
@@ -76,9 +76,9 @@ public class RestaurantTableController {
      * Retorna a mesa que foi excluida, ou seja, null e o status Http de NO CONTENT
      */
     @DeleteMapping(path = ":{id}")
-    public ResponseEntity<RestaurantTable> deleteTable(@PathVariable Long id) throws RestaurantTableNotFoundException, InvalidRestaurantTableException {
+    public ResponseEntity<RestaurantTable> deleteTable(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) throws RestaurantTableNotFoundException, InvalidRestaurantTableException {
         RestaurantTable table = tableService.findTableById(id);
-        tableService.deleteTable(table);
+        tableService.deleteTable(table, jwt.getSubject());
         return new ResponseEntity<>(table, HttpStatus.NO_CONTENT);
     }
 }
