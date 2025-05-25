@@ -1,11 +1,15 @@
 package com.example.bookingrestaurant.controllers;
 
+import com.example.bookingrestaurant.config.exception.InvalidRestaurantTableException;
+import com.example.bookingrestaurant.config.exception.RestaurantTableNotFoundException;
 import com.example.bookingrestaurant.dto.RestaurantTableDTO;
 import com.example.bookingrestaurant.model.RestaurantTable;
 import com.example.bookingrestaurant.services.RestaurantTableService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "mesas")
+@Validated
 public class RestaurantTableController {
 
     @Autowired
@@ -47,7 +52,7 @@ public class RestaurantTableController {
      * Retorna a nova mesa caso tenha sido criada e o status Http OK
      */
     @PostMapping
-    public ResponseEntity<RestaurantTable> createTable(@RequestBody RestaurantTableDTO data){
+    public ResponseEntity<RestaurantTable> createTable(@Valid @RequestBody RestaurantTableDTO data){
         RestaurantTable newTable = tableService.createRestaurantTable(data);
         return new ResponseEntity<>(newTable, HttpStatus.CREATED);
     }
@@ -60,7 +65,7 @@ public class RestaurantTableController {
      * Retorna a mesa modificada e o status Http OK
      */
     @PatchMapping(path = ":{id}")
-    public ResponseEntity<RestaurantTable> updateTable(@PathVariable Long id, @RequestBody RestaurantTableDTO updates) throws Exception {
+    public ResponseEntity<RestaurantTable> updateTable(@PathVariable Long id, @Valid @RequestBody RestaurantTableDTO updates) throws Exception {
         RestaurantTable modifiedTable = tableService.updateTable(id, updates);
         return new ResponseEntity<>(modifiedTable, HttpStatus.OK);
     }
@@ -71,7 +76,7 @@ public class RestaurantTableController {
      * Retorna a mesa que foi excluida, ou seja, null e o status Http de NO CONTENT
      */
     @DeleteMapping(path = ":{id}")
-    public ResponseEntity<RestaurantTable> deleteTable(@PathVariable Long id) throws Exception {
+    public ResponseEntity<RestaurantTable> deleteTable(@PathVariable Long id) throws RestaurantTableNotFoundException, InvalidRestaurantTableException {
         RestaurantTable table = tableService.findTableById(id);
         tableService.deleteTable(table);
         return new ResponseEntity<>(table, HttpStatus.NO_CONTENT);
