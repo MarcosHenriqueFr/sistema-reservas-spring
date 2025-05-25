@@ -10,6 +10,8 @@ import com.example.bookingrestaurant.model.BookingStatus;
 import com.example.bookingrestaurant.model.RestaurantTable;
 import com.example.bookingrestaurant.model.RestaurantTableStatus;
 import com.example.bookingrestaurant.repositories.BookingRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.List;
  */
 @Service
 public class BookingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
 
     @Autowired
     private BookingRepository bookingRepository;
@@ -62,6 +66,7 @@ public class BookingService {
 
         saveBooking(booking);
 
+        logger.info("Reserva {} criada pelo usuário {}", booking.getId(), subject);
         return booking;
     }
 
@@ -83,6 +88,7 @@ public class BookingService {
      */
     private void saveBooking(Booking booking){
         bookingRepository.save(booking);
+        logger.info("Reserva de id {} salva no banco", booking.getId());
     }
 
     /**
@@ -101,6 +107,7 @@ public class BookingService {
      */
     public List<Booking> getBookingFromUser(String subject) throws UsernameNotFoundException {
         UserAuthenticated userAuthenticated = userService.getUserByEmail(subject);
+        logger.info("O usuário {} puxou as informações de suas reservas.", subject);
         return bookingRepository.findByUser(userAuthenticated.getUser());
     }
 
@@ -131,9 +138,11 @@ public class BookingService {
         table.setStatus(RestaurantTableStatus.AVAILABLE);
 
         booking.setTable(null);
+        logger.info("Mesa {} dissociada da Reserva {}.", table.getId(), booking.getId());
         booking.setBookingStatus(BookingStatus.CANCELED);
 
         this.saveBooking(booking);
+        logger.info("A reserva {} foi cancelada com sucesso por {}.", booking.getId(), subject);
 
         return booking;
     }

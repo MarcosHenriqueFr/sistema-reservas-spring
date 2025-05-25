@@ -55,8 +55,6 @@ public class BookingController {
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
-    // TODO o usuario só pode deletar suas reservas, e Exceptions
-
     /**
      * Mapping responsável pela requisição do tipo PATCH na rota de /reservas/:{id}/cancelar.
      * Recebe os dados do id da reserva no banco e
