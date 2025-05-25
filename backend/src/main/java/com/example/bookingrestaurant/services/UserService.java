@@ -30,26 +30,20 @@ public class UserService {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    // TODO melhorar as Exceptions
-
     /**
      * Method responsável obter o usuário a partir do elemento único Email.
      * Recebe os dados de Email do BookingService.
      * Joga uma Exceção caso o Usuário não tenha sido encontrado no banco de dados.
      */
-    public UserAuthenticated getUserByEmail(String email) throws Exception{
-        try {
-            return (UserAuthenticated) userDetailsService.loadUserByUsername(email);
-        } catch (UsernameNotFoundException e){
-            throw new Exception("Usuário não encontrado!");
-        }
+    public UserAuthenticated getUserByEmail(String email) throws UsernameNotFoundException {
+        return (UserAuthenticated) userDetailsService.loadUserByUsername(email);
     }
 
     /**
      * Method responsável por persistir um usuário no banco de dados.
      * Recebe os dados do novo usuário a partir do AuthenticationController
      */
-    public User createUser(UserPostDTO dto) throws Exception {
+    public User createUser(UserPostDTO dto) {
         String name = dto.name();
         String email = dto.email();
         String password = securityConfig.passwordEncoder().encode(dto.password());
