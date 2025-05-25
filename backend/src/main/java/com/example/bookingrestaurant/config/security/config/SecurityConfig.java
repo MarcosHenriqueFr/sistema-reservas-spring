@@ -69,7 +69,7 @@ public class SecurityConfig {
                                 auth.requestMatchers(HttpMethod.POST, ENDPOINT_WITHOUT_AUTH).permitAll()
                                         .requestMatchers(HttpMethod.POST, TABLE_ENDPOINTS).hasRole(ADMIN_ROLE)
                                         .requestMatchers(HttpMethod.GET, TABLE_ENDPOINTS).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
-                                        .requestMatchers(HttpMethod.PATCH, TABLE_ENDPOINTS).hasAnyRole(ADMIN_ROLE, CUSTOMER_ROLE)
+                                        .requestMatchers(HttpMethod.PATCH, TABLE_ENDPOINTS).hasAnyRole(ADMIN_ROLE)
                                         .requestMatchers(HttpMethod.DELETE, TABLE_ENDPOINTS).hasRole(ADMIN_ROLE)
                                         .requestMatchers(BOOKING_ENDPOINTS).authenticated()
                                         .anyRequest().denyAll()
