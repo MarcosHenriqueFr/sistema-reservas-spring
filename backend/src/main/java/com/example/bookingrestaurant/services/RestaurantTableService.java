@@ -1,5 +1,7 @@
 package com.example.bookingrestaurant.services;
 
+import com.example.bookingrestaurant.config.exception.InvalidRestaurantTableException;
+import com.example.bookingrestaurant.config.exception.RestaurantTableNotFoundException;
 import com.example.bookingrestaurant.dto.RestaurantTableDTO;
 import com.example.bookingrestaurant.model.RestaurantTable;
 import com.example.bookingrestaurant.model.RestaurantTableStatus;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service responsável por receber os dados passados pelo RestaurantTableController e BookingService
@@ -22,15 +23,13 @@ public class RestaurantTableService {
     @Autowired
     private RestaurantTableRepository repository;
 
-    // TODO fazer melhores Exceptions
-
     /**
      * Method responsável por procurar a mesa de acordo com o id passado.
      * Retorna a mesa ou uma exceção de Mesa não Encontrada
      */
-    public RestaurantTable findTableById(Long id) throws Exception {
+    public RestaurantTable findTableById(Long id) throws RestaurantTableNotFoundException {
         return repository.findRestaurantTableById(id)
-                         .orElseThrow(() -> new Exception("Mesa de Restaurante não encontrada"));
+                         .orElseThrow(() -> new RestaurantTableNotFoundException("Mesa de Restaurante não encontrada"));
     }
 
     /**
@@ -62,9 +61,12 @@ public class RestaurantTableService {
 
     /**
      * Method responsável por deletar a mesa no banco.
+     * Faz uma verificação inicial, para evitar que uma mesa seja apagada se estiver em uso.
      * Não retorna a mesa.
      */
-    public void deleteTable(RestaurantTable table) {
+    public void deleteTable(RestaurantTable table) throws InvalidRestaurantTableException {
+        checkTableValidation(table);
+
         repository.delete(table);
     }
 
@@ -74,8 +76,9 @@ public class RestaurantTableService {
      * Checa se os parâmetros são nulos, e insere os dados atualizados na mesa.
      * Retorna a mesa modificada para o Controller.
      */
-    public RestaurantTable updateTable(Long id, RestaurantTableDTO updates) throws Exception {
+    public RestaurantTable updateTable(Long id, RestaurantTableDTO updates) throws RestaurantTableNotFoundException, InvalidRestaurantTableException {
         RestaurantTable table = this.findTableById(id);
+        checkTableValidation(table);
 
         if(updates.name() != null){
             table.setName(updates.name());
@@ -100,13 +103,13 @@ public class RestaurantTableService {
      * Verifica se a mesa tem o status de BOOKED(reservada) ou INACTIVE(inativa),
      * caso seja, joga uma Exceção de Mesa Inválida.
      */
-    public void checkTableValidation(RestaurantTable table) throws Exception {
+    public void checkTableValidation(RestaurantTable table) throws InvalidRestaurantTableException {
         boolean tableBooked = table.getStatus() == RestaurantTableStatus.BOOKED;
         boolean tableInactive = table.getStatus() == RestaurantTableStatus.INACTIVE;
         boolean invalidTable = tableBooked || tableInactive;
 
         if(invalidTable) {
-            throw new Exception("Mesa inválida");
+            throw new InvalidRestaurantTableException("Mesa Inativa ou Reservada");
         }
     }
 }

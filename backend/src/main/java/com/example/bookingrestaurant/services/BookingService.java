@@ -1,5 +1,8 @@
 package com.example.bookingrestaurant.services;
 
+import com.example.bookingrestaurant.config.exception.BookingException;
+import com.example.bookingrestaurant.config.exception.InvalidRestaurantTableException;
+import com.example.bookingrestaurant.config.exception.RestaurantTableNotFoundException;
 import com.example.bookingrestaurant.config.security.userdetails.UserAuthenticated;
 import com.example.bookingrestaurant.dto.BookingPostDTO;
 import com.example.bookingrestaurant.model.Booking;
@@ -8,6 +11,7 @@ import com.example.bookingrestaurant.model.RestaurantTable;
 import com.example.bookingrestaurant.model.RestaurantTableStatus;
 import com.example.bookingrestaurant.repositories.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,8 +35,6 @@ public class BookingService {
     @Autowired
     private RestaurantTableService restaurantTableService;
 
-    // TODO - Especificar as Exceptions de Create e find, somente Exceptions temporárias
-
     /**
      * Method responsável por criar uma nova reserva.
      * Recebe os parametros dos dados da nova reserva e o email do usuário.
@@ -40,14 +42,14 @@ public class BookingService {
      * valida a data da Reserva e modifica os dados da reserva e da mesa.
      * Por fim, salva o usuário e retorna o dado da reserva.
      */
-    public Booking createBooking(BookingPostDTO newBooking, String subject) throws  Exception {
+    public Booking createBooking(BookingPostDTO newBooking, String subject) throws  BookingException, RestaurantTableNotFoundException, InvalidRestaurantTableException, UsernameNotFoundException {
         UserAuthenticated userAuthenticated = userService.getUserByEmail(subject);
         RestaurantTable table = restaurantTableService.findTableById(newBooking.tableId());
         restaurantTableService.checkTableValidation(table);
 
         boolean validTime = this.checkValidBookingDate(newBooking.date());
         if(!validTime){
-            throw new Exception("Data Inválida");
+            throw new BookingException("Data Inválida");
         }
 
         Booking booking = new Booking();
@@ -87,9 +89,9 @@ public class BookingService {
      * Method privado responsável por procurar uma reserva pelo seu id.
      * Caso não seja encontrada, joga uma exceção com reserva não encontrada.
      */
-    private Booking findBookingById(Long id) throws Exception {
+    private Booking findBookingById(Long id) throws BookingException {
         return bookingRepository.findBookingById(id)
-                .orElseThrow(() -> new Exception("Reserva não encontrada"));
+                .orElseThrow(() -> new BookingException("Reserva não encontrada"));
     }
 
     /**
@@ -97,7 +99,7 @@ public class BookingService {
      * Recebe um email do usuário(do token) e converte em um Usuário autenticado.
      * Retorna a lista ou null caso o usuário não possua reservas.
      */
-    public List<Booking> getBookingFromUser(String subject) throws Exception {
+    public List<Booking> getBookingFromUser(String subject) throws UsernameNotFoundException {
         UserAuthenticated userAuthenticated = userService.getUserByEmail(subject);
         return bookingRepository.findByUser(userAuthenticated.getUser());
     }
@@ -105,24 +107,30 @@ public class BookingService {
     /**
      * Method responsável por mudar o status de uma reserva de Active para Canceled.
      * Recebe o id da reserva e o email do usuário(do token).
-     * Faz as validações para modificar somente a lista do usuário autenticado
+     * Faz as validações para modificar somente a lista do usuário autenticado,
+     * lança um erro caso o usuário tente cancelar uma reserva já cancelada
      * Salva a nova reserva cancelada e retorna a reserva.
      */
-    public Booking softDeleteBooking(Long id, String subject) throws Exception {
-        Booking booking = this.findBookingById(id);
+    public Booking softDeleteBooking(Long id, String subject) throws BookingException {
 
         List<Booking> userBookings = this.getBookingFromUser(subject);
-
         if(userBookings.isEmpty()){
-            throw new Exception("O usuário não fez nenhuma reserva");
+            throw new BookingException("O usuário não fez nenhuma reserva");
         }
 
+        Booking booking = this.findBookingById(id);
         if(!userBookings.contains(booking)){
-            throw new Exception("Reserva não encontrada");
+            throw new BookingException("Reserva não encontrada");
         }
 
         RestaurantTable table = booking.getTable();
+        if(table == null){
+            throw new BookingException("Reserva já cancelada");
+        }
+
         table.setStatus(RestaurantTableStatus.AVAILABLE);
+
+        booking.setTable(null);
         booking.setBookingStatus(BookingStatus.CANCELED);
 
         this.saveBooking(booking);
