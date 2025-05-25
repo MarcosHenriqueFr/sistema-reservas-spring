@@ -4,6 +4,8 @@ import com.example.bookingrestaurant.config.security.auth.AuthenticationService;
 import com.example.bookingrestaurant.dto.UserPostDTO;
 import com.example.bookingrestaurant.model.User;
 import com.example.bookingrestaurant.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class AuthenticationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -39,6 +43,7 @@ public class AuthenticationController {
     @PostMapping("login")
     public ResponseEntity<String> authenticate(Authentication authentication){
         String token = authenticationService.authenticate(authentication);
+        logger.info("Usuário autenticado: {}.", authentication.getName());
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 

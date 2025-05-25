@@ -7,6 +7,8 @@ import com.example.bookingrestaurant.dto.UserPostDTO;
 import com.example.bookingrestaurant.model.RoleName;
 import com.example.bookingrestaurant.model.User;
 import com.example.bookingrestaurant.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -56,6 +60,7 @@ public class UserService {
         user.setRole(role);
 
         this.saveUser(user);
+        logger.info("Usuário criado com sucesso.");
 
         return user;
     }
@@ -66,5 +71,6 @@ public class UserService {
      */
     private void saveUser(User user){
         userRepository.save(user);
+        logger.info("Usuário salvo no banco de dados.");
     }
 }

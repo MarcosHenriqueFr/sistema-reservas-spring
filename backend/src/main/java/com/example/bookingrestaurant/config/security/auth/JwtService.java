@@ -1,5 +1,7 @@
 package com.example.bookingrestaurant.config.security.auth;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class JwtService {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
     private final JwtEncoder encoder;
 
     @Value("${jwt.issuer}")
@@ -49,6 +54,7 @@ public class JwtService {
                 .claim("scope", scopes)
                 .build();
 
+        logger.info("Token gerado para o usuário {}.", authentication.getName());
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
