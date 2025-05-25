@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 
 /**
  * Entidade responsável por representar o Usuário do Sistema.
@@ -27,12 +28,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 120)
+    @Column(length = 120, nullable = false)
+    @Size(min = 3, message = "O nome precisa de pelo menos três caracteres")
     private String name;
 
     @Column(unique = true, nullable = false, length = 100)
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
-            flags = Pattern.Flag.CASE_INSENSITIVE)
+            flags = Pattern.Flag.CASE_INSENSITIVE,
+            message = "O email precisa ser válido")
     private String email;
 
     @Column(nullable = false, length = 200)

@@ -9,6 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.Objects;
 
@@ -27,12 +30,16 @@ public class RestaurantTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
+    @NotBlank(message = "Informe o nome/código da mesa")
+    @Size(min = 3, message = "O código da mesa precisa de pelo menos três caracteres")
     private String name;
 
+    @Range(min = 2, max = 20, message = "A capacidade da mesa tem que ser entre 2 e 20")
+    @Column(name = "capacity", nullable = false)
     private int capacity;
 
-    @Column(length = 70)
+    @Column(length = 70, nullable = false)
     @Enumerated(EnumType.STRING)
     private RestaurantTableStatus restaurantTableStatus;
 
