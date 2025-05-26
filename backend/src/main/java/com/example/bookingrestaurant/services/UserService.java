@@ -1,5 +1,7 @@
 package com.example.bookingrestaurant.services;
 
+import com.example.bookingrestaurant.config.exception.BookingException;
+import com.example.bookingrestaurant.config.exception.UserAlreadyExistsException;
 import com.example.bookingrestaurant.config.security.config.SecurityConfig;
 import com.example.bookingrestaurant.config.security.userdetails.UserAuthenticated;
 import com.example.bookingrestaurant.config.security.userdetails.UserDetailsServiceImpl;
@@ -44,12 +46,26 @@ public class UserService {
     }
 
     /**
+     * Method responsável por checar se um usuário já existe no sistema,
+     * e retorna um booleano indicando se o email pode ser usado.
+     */
+    private boolean isUserAvailable(String email){
+        User user = userRepository.findByEmail(email).orElse(null);
+        return user == null;
+    }
+
+    /**
      * Method responsável por persistir um usuário no banco de dados.
      * Recebe os dados do novo usuário a partir do AuthenticationController
      */
-    public User createUser(UserPostDTO dto) {
-        String name = dto.name();
+    public User createUser(UserPostDTO dto) throws UserAlreadyExistsException {
         String email = dto.email();
+
+        if(!this.isUserAvailable(email)){
+            throw new UserAlreadyExistsException("O email já existe no sistema");
+        }
+
+        String name = dto.name();
         String password = securityConfig.passwordEncoder().encode(dto.password());
         RoleName role = dto.role();
 

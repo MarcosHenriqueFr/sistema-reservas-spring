@@ -37,16 +37,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e){
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        String error = e.getMessage() == null ? "Um erro aconteceu." : e.getMessage();
+        String error = "Um erro aconteceu.";
 
-        logger.error("Exceção inesperada aconteceu: {}.", e.getMessage());
+        logger.error("Exceção inesperada aconteceu: {}", e.getMessage());
         logger.error("Trace da Exceção: ", e);
-
-        System.out.println(e.getMessage());
 
         ErrorResponse errorResponse =
                 new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase(), error);
         return new ResponseEntity<>(errorResponse, httpStatus);
+    }
+
+    /**
+     * ExceptionHandler responsável pela exceções vindas do UserService,
+     * esta sendo a exceção de email já existente no banco de dados.
+     * Retorna o corpo do erro e um status 422(Unprocessable Entity).
+     */
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        logger.error("Exceção de chave duplicada no banco: {}", e.getMessage());
+        logger.error("Trace da exceção: ", e);
+
+        String error = e.getMessage();
+
+        ErrorResponse errorResponse =
+                new ErrorResponse(status.value(), status.getReasonPhrase(), error);
+
+        return new ResponseEntity<>(errorResponse, status);
     }
 
     /**
@@ -58,7 +76,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBookingException(BookingException e){
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        logger.error("Exceção relacionada as reservas: {}.", e.getMessage());
+        logger.error("Exceção relacionada as reservas: {}", e.getMessage());
         logger.error("Trace da Exceção: ", e);
 
         ErrorResponse errorResponse =
@@ -76,7 +94,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUserNotFoundInDatabase(UsernameNotFoundException e){
         HttpStatus status = HttpStatus.UNAUTHORIZED;
 
-        logger.error("Exceção ao procurar usuário no banco: {}.", e.getMessage());
+        logger.error("Exceção ao procurar usuário no banco: {}", e.getMessage());
         logger.error("Trace da exceção: ", e);
 
         ErrorResponse errorResponse =
@@ -95,7 +113,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleJsonParseError(HttpMessageNotReadableException e){
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        logger.error("Exceção na conversão da Requisição: {}.", e.getMessage());
+        logger.error("Exceção na conversão da Requisição: {}", e.getMessage());
         logger.error("Trace da exceção: ", e);
 
         Throwable rootCause = ExceptionUtils.getRootCause(e);
@@ -117,7 +135,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidDTO(MethodArgumentNotValidException e){
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
-        logger.error("Exceção de validação da requisição: {}.", e.getMessage());
+        logger.error("Exceção de validação da requisição: {}", e.getMessage());
         logger.error("Trace da exceção: ", e);
 
         Map<String, String> errors = new HashMap<>();
@@ -144,7 +162,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRestaurantTableException(RestaurantTableException e){
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        logger.error("Exceção relacionada as mesas de restaurante: {}.", e.getMessage());
+        logger.error("Exceção relacionada as mesas de restaurante: {}", e.getMessage());
         logger.error("Trace da exceção: ", e);
 
         ErrorResponse errorResponse =
@@ -162,7 +180,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidationExceptions(ConstraintViolationException e){
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
-        logger.error("Exceção de validação: {}.", e.getMessage());
+        logger.error("Exceção de validação: {}", e.getMessage());
         logger.error("Trace da exceção: ", e);
 
         Set<ConstraintViolation<?>> errors = e.getConstraintViolations();
