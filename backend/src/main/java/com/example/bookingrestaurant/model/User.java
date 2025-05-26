@@ -35,7 +35,7 @@ public class User {
     @Column(unique = true, nullable = false, length = 100)
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
             flags = Pattern.Flag.CASE_INSENSITIVE,
-            message = "O email precisa ser válido")
+            message = "O email precisa ser válido.")
     private String email;
 
     @Column(nullable = false, length = 200)

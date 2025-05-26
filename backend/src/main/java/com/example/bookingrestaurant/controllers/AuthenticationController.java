@@ -1,9 +1,11 @@
 package com.example.bookingrestaurant.controllers;
 
+import com.example.bookingrestaurant.config.exception.UserAlreadyExistsException;
 import com.example.bookingrestaurant.config.security.auth.AuthenticationService;
 import com.example.bookingrestaurant.dto.UserPostDTO;
 import com.example.bookingrestaurant.model.User;
 import com.example.bookingrestaurant.services.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,7 @@ public class AuthenticationController {
      * retorna o usuário se ele for registrado no banco
      * */
     @PostMapping("registrar")
-    public ResponseEntity<User> createUser(@RequestBody UserPostDTO userData) {
+    public ResponseEntity<User> createUser(@RequestBody @Valid UserPostDTO userData) throws UserAlreadyExistsException {
         User user = userService.createUser(userData);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
