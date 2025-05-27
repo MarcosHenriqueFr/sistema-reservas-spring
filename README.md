@@ -19,7 +19,7 @@ Antes de iniciar o projeto, é necessário baixar os itens a seguir:
 <ul>
     <li>JDK 21
     <li>Git
-    <li>Banco postgreSQL
+    <li>Banco PostgreSQL
 </ul>
 
 ### Clonando
@@ -49,7 +49,7 @@ spring.datasource.username=[seu_usuario_do_banco]
 spring.datasource.password=[sua_senha_do_banco]
 spring.datasource.driver-class-name=org.postgresql.Driver
 
-spring.jpa.show-sql=true // Exclua essa linha para não ver as querys SQL
+spring.jpa.show-sql=true // Exclua essa linha para não ver as queries SQL
 spring.jpa.hibernate.ddl-auto=create-drop // Mude essa linha caso não queira que o hibernate derrube o banco
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 
@@ -97,12 +97,12 @@ Agora é só rodar o projeto, o maven precisa estar instalado globalmente:
 mvn spring-boot:run
 ```
 
-Ou caso o maven não esteja instalado:
+Caso não possua o maven digite:
 ```bash
 ./mvnw spring-boot:run
 ```
 
-## Endpoints 
+## Endpoints 🚩
 
 | Endpoint               | Descrição                                          
 |----------------------|-----------------------------------------------------
@@ -120,6 +120,27 @@ Ou caso o maven não esteja instalado:
 
 O conjunto de Requisições do Postman estará na **pasta** de `sistema-reservas-spring` do projeto, para testar com mais facilidade. Simplesmente importe o arquivo JSON para o Postman.
 
-## Adicionar
+## O que foi aprendido 📝
 
-Em andamento...
+<ul>
+    <li> Como fazer uma estruturação de logs.
+    <li> O uso de Spring Boot para Web Servers.
+    <li> A aplicação de autenticação e autorização via Spring security com o uso de JWT.
+    <li> Uso de uma estrutura semelhante ao MVC, com a interação do model com os controllers.
+    <li> Aplicação de validações simples usando o Bean Validation com padrões RegEx.
+    <li> Criação de banco de dados PostgreSQL via Hibernate.
+    <li> Gerenciamento de Exceções e respostas para o usuário.
+</ul>
+
+## Possíveis Evoluções 📈
+
+
+<ul>
+    <li> Uso de testes unitários para projetos Spring Boot.
+    <li> Docker para facilitar a demonstração da API.
+    <li> A criação de um frontend para fácil visualização dos recursos da API.
+    <li> Uso de cache com Spring Boot.
+</ul>
+<br><br>
+
+**Obrigado pela sua atenção. Qualquer feedback é bem-vindo!**
