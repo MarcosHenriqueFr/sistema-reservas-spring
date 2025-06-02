@@ -28,7 +28,7 @@ public class RestaurantTableService {
     private RestaurantTableRepository repository;
 
     /**
-     * Method responsável por procurar a mesa de acordo com o id passado.
+     * Metodo responsável por procurar a mesa de acordo com o id passado.
      * Retorna a mesa ou uma exceção de Mesa não Encontrada
      */
     public RestaurantTable findTableById(Long id) throws RestaurantTableNotFoundException {
@@ -37,7 +37,7 @@ public class RestaurantTableService {
     }
 
     /**
-     * Method responsável por criar uma nova mesa.
+     * Metodo responsável por criar uma nova mesa.
      * Recebe os dados passados pelo RestaurantTableController.
      * Salva a nova mesa no banco de dados e retorna ela.
      */
@@ -51,7 +51,7 @@ public class RestaurantTableService {
     }
 
     /**
-     * Method privado responsável por salvar a mesa no banco de dados.
+     * Metodo privado responsável por salvar a mesa no banco de dados.
      * Recebe os dados de uma mesa passada e faz o commit dela.
      */
     private void saveRestaurantTable(RestaurantTable table){
@@ -60,7 +60,7 @@ public class RestaurantTableService {
     }
 
     /**
-     * Method responsável por retornar todas as mesas do banco.
+     * Metodo responsável por retornar todas as mesas do banco.
      * Retorna as mesas para o RestaurantTableController.
      */
     public List<RestaurantTable> getAllTables(String email) {
@@ -69,7 +69,7 @@ public class RestaurantTableService {
     }
 
     /**
-     * Method responsável por deletar a mesa no banco.
+     * Metodo responsável por deletar a mesa no banco.
      * Faz uma verificação inicial, para evitar que uma mesa seja apagada se estiver em uso.
      * Não retorna a mesa.
      */
@@ -81,7 +81,7 @@ public class RestaurantTableService {
     }
 
     /**
-     * Method responsável por atualizar os dados de uma mesa.
+     * Metodo responsável por atualizar os dados de uma mesa.
      * Recebe o id da mesa e os dados para serem atualizados do RestaurantTableController.
      * Checa se os parâmetros são nulos, e insere os dados atualizados na mesa.
      * Retorna a mesa modificada para o Controller.
@@ -109,7 +109,7 @@ public class RestaurantTableService {
     }
 
     /**
-     * Method responsável por checar a validação do status de uma mesa.
+     * Metodo responsável por checar a validação do status de uma mesa.
      * Recebe a mesa que precisa ser checada.
      * Verifica se a mesa tem o status de BOOKED(reservada) ou INACTIVE(inativa),
      * caso seja, joga uma Exceção de Mesa Inválida.

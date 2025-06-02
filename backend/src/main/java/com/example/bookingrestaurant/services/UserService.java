@@ -37,7 +37,7 @@ public class UserService {
     private UserDetailsServiceImpl userDetailsService;
 
     /**
-     * Method responsável obter o usuário a partir do elemento único Email.
+     * Metodo responsável obter o usuário a partir do elemento único Email.
      * Recebe os dados de Email do BookingService.
      * Joga uma Exceção caso o Usuário não tenha sido encontrado no banco de dados.
      */
@@ -46,7 +46,7 @@ public class UserService {
     }
 
     /**
-     * Method responsável por checar se um usuário já existe no sistema,
+     * Metodo responsável por checar se um usuário já existe no sistema,
      * e retorna um booleano indicando se o email pode ser usado.
      */
     private boolean isUserAvailable(String email){
@@ -55,7 +55,7 @@ public class UserService {
     }
 
     /**
-     * Method responsável por persistir um usuário no banco de dados.
+     * Metodo responsável por persistir um usuário no banco de dados.
      * Recebe os dados do novo usuário a partir do AuthenticationController
      */
     public User createUser(UserPostDTO dto) throws UserAlreadyExistsException {
@@ -82,7 +82,7 @@ public class UserService {
     }
 
     /**
-     * Method privado responsável por salvar o usuário no banco de dados.
+     * Metodo privado responsável por salvar o usuário no banco de dados.
      * Recebe os dados do usuário passado e faz o commit dele.
      */
     private void saveUser(User user){

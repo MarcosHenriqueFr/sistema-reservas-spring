@@ -35,7 +35,7 @@ public class JwtService {
     }
 
     /**
-     * Method responsável por toda a criação do JWT token.
+     * Metodo responsável por toda a criação do JWT token.
      * Recebe uma Authentication com as credenciais do usuário.
      * Delimita o Issuer, a data de criação e expiração,
      * o email do Usuário e os papéis dele no token.
@@ -59,14 +59,14 @@ public class JwtService {
     }
 
     /**
-     * Method privado dedicado para a data de inicio do token.
+     * Metodo privado dedicado para a data de inicio do token.
      */
     private Instant creationDate(){
         return ZonedDateTime.now(ZoneId.of("America/Recife")).toInstant();
     }
 
     /**
-     * Method privado dedicado para a data de fim do token.
+     * Metodo privado dedicado para a data de fim do token.
      * Retorna o tempo de vida do token, sendo de 2 horas.
      */
     private Instant expirationDate(){

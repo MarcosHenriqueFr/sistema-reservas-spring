@@ -40,7 +40,7 @@ public class BookingService {
     private RestaurantTableService restaurantTableService;
 
     /**
-     * Method responsável por criar uma nova reserva.
+     * Metodo responsável por criar uma nova reserva.
      * Recebe os parametros dos dados da nova reserva e o email do usuário.
      * Além das validações da mesa e de usuário,
      * valida a data da Reserva e modifica os dados da reserva e da mesa.
@@ -71,7 +71,7 @@ public class BookingService {
     }
 
     /**
-     * Method responsável por checar se uma data de Reserva é valida,
+     * Metodo responsável por checar se uma data de Reserva é valida,
      * o parâmetro para validação é do período de 30 dias.
      * Retorna um valor booleano correspondente a sua validação.
      */
@@ -83,7 +83,7 @@ public class BookingService {
     }
 
     /**
-     * Method privado responsável por salvar os dados da Reserva diretamente no banco de dados.
+     * Metodo privado responsável por salvar os dados da Reserva diretamente no banco de dados.
      * Recebe a entidade de Booking para fazer o commit.
      */
     private void saveBooking(Booking booking){
@@ -92,7 +92,7 @@ public class BookingService {
     }
 
     /**
-     * Method privado responsável por procurar uma reserva pelo seu id.
+     * Metodo privado responsável por procurar uma reserva pelo seu id.
      * Caso não seja encontrada, joga uma exceção com reserva não encontrada.
      */
     private Booking findBookingById(Long id) throws BookingException {
@@ -101,7 +101,7 @@ public class BookingService {
     }
 
     /**
-     * Method responsável por procurar uma lista de reservas a partir de um usuário.
+     * Metodo responsável por procurar uma lista de reservas a partir de um usuário.
      * Recebe um email do usuário(do token) e converte em um Usuário autenticado.
      * Retorna a lista ou null caso o usuário não possua reservas.
      */
@@ -112,7 +112,7 @@ public class BookingService {
     }
 
     /**
-     * Method responsável por mudar o status de uma reserva de Active para Canceled.
+     * Metodo responsável por mudar o status de uma reserva de Active para Canceled.
      * Recebe o id da reserva e o email do usuário(do token).
      * Faz as validações para modificar somente a lista do usuário autenticado,
      * lança um erro caso o usuário tente cancelar uma reserva já cancelada
